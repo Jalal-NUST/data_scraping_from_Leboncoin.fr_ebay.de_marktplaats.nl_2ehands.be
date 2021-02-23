@@ -1,1 +1,7 @@
 env
+chromedriver.exe
+data_scraped.csv
+data_scraped.xlsx
+test.csv
+test.ipynb
+test.py
