@@ -117,6 +117,8 @@ while(not(q.empty())):
 ######################################################################
 # data = pd.read_csv(r'2dehands_init.csv', encoding= 'unicode_escape'))
 data = data_new
+print("finish lop")
+print(len(data.iloc[:,2]))
 for i in range(len(data.iloc[:,2])):
     link =data.iloc[i,2]
     title =data.iloc[i,0]
@@ -125,10 +127,10 @@ for i in range(len(data.iloc[:,2])):
     
     s.scrap_img(link,title)
     
-count = 0
-while(not(q.empty())):
-    count = count + 1
-    result = q.get()
-#     print(count," --> " , result)
-    data_new1 = data_new1.append(result, ignore_index=True)
-data_new1.to_csv(r'final_2dehands.csv')
+# count = 0
+# while(not(q.empty())):
+#     count = count + 1
+#     result = q.get()
+# #     print(count," --> " , result)
+#     data_new1 = data_new1.append(result, ignore_index=True)
+# data_new1.to_csv(r'final_2dehands.csv')
