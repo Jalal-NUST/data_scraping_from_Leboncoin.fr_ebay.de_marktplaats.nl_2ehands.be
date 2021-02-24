@@ -59,6 +59,7 @@ class Scrap:
             dic_new['Title']= title
             dic_new['Price']= price
             dic_new['item_link']= item_link
+            print("input ----< ",dic_new)
             q.put(dic_new)
         return total_pages
         
@@ -69,9 +70,9 @@ class Scrap:
     
             
     def scrap_img(self,item_link,item_title):
-        dic_new={}
-        dic_new['item_link']= item_link
-        dic_new['Title']= item_title
+        dic_new1={}
+        dic_new1['item_link']= item_link
+        dic_new1['Title']= item_title
 #         dic_new['Price']= item_price
         src = self.browser.page_source
         soup = BeautifulSoup(src,'lxml')
@@ -79,14 +80,15 @@ class Scrap:
         for img in range(4):
             try:
                 image = 'https:' + imgs[img].find('img')['src']
-                dic_new['img_link'+str(img)]= image
+                dic_new1['img_link'+str(img)]= image
             except:
                 pass
         price = soup.find('span',{'class':"price "}).get_text().strip()
         des = soup.find('div',{'class':"wrapped"}).get_text().strip()  
-        dic_new['Price']= price
-        dic_new['Description']= des[:150]
-        q.put(dic_new)
+        dic_new1['Price']= price
+        dic_new1['Description']= des[:150]
+        print('-------<',dic_new1)
+        q.put(dic_new1)
 
 
 ##################################################################
@@ -97,27 +99,34 @@ s.search()
 total = s.scrap_data()
 clear()
 print('Total ',total,' pages found...')
-pages = eval(input('How many pages to scrap data from? (excluding main search page)  '))
-st_page= eval(input('From which page scraping should begin?  '))
-for page in range(st_page,st_page+pages+1):
+pages = 1
+
+# pages = eval(input('How many pages to scrap data from? (excluding main search page)  '))
+# st_page= eval(input('From which page scraping should begin?  '))
+for page in range(2,pages+1):
     
     s.next_page(page_no = page,search_item='porselein')
     s.scrap_data()
     time.sleep(3)
 
-
+print('while start')
 #####################################################################
 count = 0
+data_new1 =[]
 while(not(q.empty())):
     count = count + 1
     result = q.get()
-#     print(count," --> " , result)
-    data_new = data_new.append(result, ignore_index=True)
+    print(count," --> " , result)
+    data_new1.append(result)
 # data_new.to_csv(r'2dehands_init.csv'))
+print('while finish')
+print(data_new1)
 ######################################################################
 # data = pd.read_csv(r'2dehands_init.csv', encoding= 'unicode_escape'))
 data = data_new
+print(len(data.iloc[:,2]))
 for i in range(len(data.iloc[:,2])):
+    printt('---------')
     link =data.iloc[i,2]
     title =data.iloc[i,0]
 #     price =data.iloc[i,2]
@@ -125,10 +134,10 @@ for i in range(len(data.iloc[:,2])):
     
     s.scrap_img(link,title)
     
-count = 0
-while(not(q.empty())):
-    count = count + 1
-    result = q.get()
-#     print(count," --> " , result)
-    data_new1 = data_new1.append(result, ignore_index=True)
-data_new1.to_csv(r'final_2dehands.csv')
+# count = 0
+# while(not(q.empty())):
+#     count = count + 1
+#     result = q.get()
+# #     print(count," --> " , result)
+#     data_new1 = data_new1.append(result, ignore_index=True)
+# data_new1.to_csv(r'final_2dehands.csv')
